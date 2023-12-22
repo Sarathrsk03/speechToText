@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+    <title>Text To Speech</title>
+    <script>
+       function checkAudioFile() {
+        // Replace 'output.mp3' with the actual name of your audio file
+        var audioFile = "{{ url_for('static', filename='audio/output.mp3') }}";
+
+        // Check if the audio file exists
+        fetch(audioFile)
+            .then(response => {
+                if (response.ok) {
+                    // Audio file exists, update the audio element
+                    document.getElementById("audioPlayer").src = audioFile;
+                    document.getElementById("audioPlayer").style.display = "block";
+                } else {
+                    // Audio file does not exist, retry after 1 second
+                    setTimeout(checkAudioFile, 1000);
+                }
+            })
+            .catch(error => {
+                // Error occurred, retry after 1 second
+                setTimeout(checkAudioFile, 1000);
+            });
+    }
+
+    // Call the function when the page loads
+    window.onload = checkAudioFile;
+    </script>
+</head>
+<body>
+    <h1>Text To Speech</h1>
+    
+    <form method="post" action="{{ url_for('index') }}">
+        <label for="paragraph">Enter the text to convert:</label>
+        <textarea id="paragraph" name="paragraph" rows="4" cols="50" required></textarea>
+        <br>
+
+        <input type="submit" value="Generate Audio">
+    </form>
+
+    {% if audio_path %}
+        <audio controls id="audioPlayer" style="display: none;">
+            <!-- Initially empty source, will be updated dynamically -->
+            <source src="" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+    {% endif %}
+</body>
+</html>
