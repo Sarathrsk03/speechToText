@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import os
 from os.path import join, dirname
-from playsound import playsound
+
 
 dotenv_path = ".env"
 load_dotenv(dotenv_path)
